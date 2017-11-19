@@ -1355,3 +1355,27 @@ def fortune_insert_db(json_obj):
         return_msg["error"] = e.args[1]
         return return_msg
 
+def cowbei_insert_db(json_obj):
+    try:
+        return_msg = {}
+        return_msg["result"] = "fail"
+        date = str(datetime.date.today())
+        try:
+            data_type = send_obj["data_type"]
+            serial_number = send_obj["serial_number"]
+            article = send_obj["article"]
+        except:
+            return_msg["error"] = "input parameter missing"
+            return return_msg
+
+        #check
+        with CowbeiDao() as cowbeiDao:
+            existed = cowbeiDao.checkCowbeiExisted()
+            if not existed:
+                cowbeiDao.insertCowbei(data_type, serial_number, article)
+
+        return_msg["result"] = "success"
+        return return_msg
+    except DB_Exception as e:
+        return_msg["error"] = e.args[1]
+        return return_msg

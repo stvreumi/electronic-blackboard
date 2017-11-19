@@ -606,3 +606,39 @@ class NewsQRCodeDao(DefaultDao):
     def checkNewsExisted(self,serialNumber):
         sql = "SELECT COUNT(*) FROM news_QR_code WHERE serial_number = '{serialNumber}'".format(serialNumber=serialNumber)
         return self.queryOneValue(sql)
+
+class CowbeiDao(DefaultDao):
+    def getCowbei(self):
+        sql = 'SELECT * FROM ' \
+            + '(SELECT article, serial_number ' \
+            + 'FROM cowbei where is_delete=0' \
+            + 'ORDER BY upload_time DESC LIMIT 10) as data ORDER BY RAND() LIMIT 2'
+        ret = self.db.query(sql)
+        if len(ret):
+            return ret
+        else:
+            #TODO check need to raise exception or not
+            return None
+
+    def getCowbeiByTime(self,hours,limit):
+        sql = 'SELECT article, serial_number ' \
+            + 'FROM cowbei where is_delete=0 and serial_number != "-1" ' \
+            + 'and upload_time >= DATE_SUB(NOW(), INTERVAL {hours} HOUR) '.format(hours=hours) \
+            + 'ORDER BY RAND() LIMIT {limitNumber}'.format(limitNumber=limit)
+        ret = self.db.query(sql)
+        if len(ret):
+            return ret
+        else:
+            #TODO check need to raise exception or not
+            return None
+
+    def insertCowbei(self,dataType,serialNumber,article):
+        sql = "INSERT INTO cowbei " \
+            +" (`serial_number`, `article`)" \
+            +" VALUES ('{serial_number}','{article}')".format(
+            serial_number=serialNumber,article=article)
+        self.db.cmd(sql)
+
+    def checkCowbeiExisted(self,serialNumber):
+        sql = "SELECT COUNT(*) FROM cowbei_QR_code WHERE serial_number = '{serialNumber}'".format(serialNumber=serialNumber)
+        return self.queryOneValue(sql)
