@@ -13,6 +13,7 @@ from server_api import get_upcoming_events
 from apiclient.http import MediaIoBaseDownload
 from apiclient import discovery
 from news_crawler.news_crawler import *
+from news_crawler.cowbei_crawler import *
 import urllib
 import httplib2
 import io
@@ -1118,7 +1119,25 @@ def crawler_constellation_fortune():
         return_msg["error"] = gen_error_msg(e.args[1])
         return return_msg
 
-def check_table(news=False,fortune=False):
+def crawler_NCTUcowbei():
+    try:
+        return_msg = {}
+        return_msg["result"] = "fail"
+
+        #check if table 'news_QR_code' exists
+        check_table(cowbei=True)
+        
+        #start grab NCTU cowbei info
+        try:
+            grab_NCTUcowbei()
+        except:
+            return_msg["error"] = "ERROR occurs in NCTU cowbei crawler. Please check the correction of news_crawler"
+            return return_msg
+    except DB_Exception as e:
+        return_msg["error"] = gen_error_msg(e.args[1])
+        return return_msg
+
+def check_table(news=False,fortune=False,cowbei=False):
     with DatabaseDao() as databaseDao:
         if news:
             existed = databaseDao.checkTableExisted('news_QR_code')
@@ -1128,6 +1147,10 @@ def check_table(news=False,fortune=False):
             existed = databaseDao.checkTableExisted('fortune')
             if not existed:
                 return create_fortune_table()
+        elif cowbei:
+            existed = databaseDao.checkTableExisted('cowbei')
+            if not existed:
+                return create_cowbei_table()
     return dict(result='success')
 
 def crawler_schedule():
@@ -1141,9 +1164,10 @@ def crawler_schedule():
         return_medium = crawler_news('medium')
         return_ptt = crawler_ptt_news(boards)
         return_fortune = crawler_constellation_fortune()
+        return_cowbei = crawler_NCTUcowbei()
         if return_inside["result"]=="success" and return_techorange["result"]=="success" \
             and return_ptt["result"]=="success" and return_medium["result"]=="success" \
-            and return_fortune["result"]=="success":
+            and return_fortune["result"]=="success" and return_cowbei["result"]=="success":
             return_msg["result"] = "success"
         else:
             return_msg['error'] = 'crawler schedule failed'
