@@ -640,5 +640,5 @@ class CowbeiDao(DefaultDao):
         self.db.cmd(sql)
 
     def checkCowbeiExisted(self,serialNumber):
-        sql = "SELECT COUNT(*) FROM cowbei_QR_code WHERE serial_number = '{serialNumber}'".format(serialNumber=serialNumber)
+        sql = "SELECT COUNT(*) FROM cowbei WHERE serial_number = '{serialNumber}'".format(serialNumber=serialNumber)
         return self.queryOneValue(sql)

@@ -1361,16 +1361,16 @@ def cowbei_insert_db(json_obj):
         return_msg["result"] = "fail"
         date = str(datetime.date.today())
         try:
-            data_type = send_obj["data_type"]
-            serial_number = send_obj["serial_number"]
-            article = send_obj["article"]
+            data_type = json_obj["data_type"]
+            serial_number = json_obj["serial_number"]
+            article = json_obj["article"]
         except:
             return_msg["error"] = "input parameter missing"
             return return_msg
 
         #check
         with CowbeiDao() as cowbeiDao:
-            existed = cowbeiDao.checkCowbeiExisted()
+            existed = cowbeiDao.checkCowbeiExisted(serial_number)
             if not existed:
                 cowbeiDao.insertCowbei(data_type, serial_number, article)
 

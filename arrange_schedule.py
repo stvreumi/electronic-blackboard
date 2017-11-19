@@ -1133,6 +1133,8 @@ def crawler_NCTUcowbei():
         except:
             return_msg["error"] = "ERROR occurs in NCTU cowbei crawler. Please check the correction of news_crawler"
             return return_msg
+        
+        return_msg["result"] = "success"
     except DB_Exception as e:
         return_msg["error"] = gen_error_msg(e.args[1])
         return return_msg
@@ -1166,7 +1168,8 @@ def crawler_schedule():
         return_fortune = crawler_constellation_fortune()
         return_cowbei = crawler_NCTUcowbei()
         if return_inside["result"]=="success" and return_techorange["result"]=="success" \
-            and return_ptt["result"]=="success" and return_medium["result"]=="success" \
+            and return_ptt["result"]=="success" \
+            and return_medium["result"]=="success" \
             and return_fortune["result"]=="success" and return_cowbei["result"]=="success":
             return_msg["result"] = "success"
         else:

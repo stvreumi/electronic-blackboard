@@ -11,7 +11,8 @@ import os
 import datetime
 
 def getToken():
-    token = "EAACEdEose0cBAGmx6WgZBNRRIpXQHmFUDSqHJwimcc0UPPqwemiYEeJ3AzWo88fwaY3M4bfwRiySeG0gXLaQ3NuPSEEIJ4bZAx8QxD9NgFZCFtY9cH55i7ViytnmMFHevvUmQB8J0ZBw2pZAqJXZBQ0SPgP62SBQ15t1GmIZBzb9iII4JCUDZC3kJWz98ZBBlI4IZD"
+    with open("token.txt", "r") as f:
+        token = f.readline()
     return token
 
 def grab_NCTUcowbei():
@@ -44,15 +45,13 @@ def save_db_data(serial_number, article, type_name):
     return send_obj
 
 #create data_types for all websites crawler grabbed
-def create_cowbei_data_types():
-    create_data_type('cowbei')
 
 def create_cowbei_table():
     try:
         fields = OrderedDict()
         fields['id'] = 'int NOT NULL unique key auto_increment'
         fields['serial_number'] = 'varchar(40) not NULL'
-        fields['artical'] = 'varchar(500) not NULL'
+        fields['article'] = 'varchar(500) not NULL'
         fields['upload_time'] = 'datetime default now()'
         fields['is_delete'] = 'bit(1) default 0'
         with DatabaseDao() as databaseDao:
@@ -61,5 +60,3 @@ def create_cowbei_table():
     except DB_Exception as e:
         return dict(error=e.args[1],result='fail')
 
-# if __name__ == '__main__':
-#     grab_NCTUcowbei()
