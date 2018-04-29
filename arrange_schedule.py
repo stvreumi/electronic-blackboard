@@ -990,7 +990,7 @@ def auto_text_generator():
             existed = dataTypeDao.checkTypeExisted("文字")
         if not existed:
             create_data_type("文字")
-
+        
         #generate news text from db news_QR_code table
         with DataTypeDao() as dataTypeDao:
             existed = dataTypeDao.checkTypeExisted("新聞")

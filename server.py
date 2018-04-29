@@ -150,6 +150,18 @@ class UploadHandler(BaseHandler):
                 self.redirect("/upload")
         else:
             display_object.__class__ = DisplayText
+
+            # if upload personal image
+            if 'file' in self.request.files:
+                file_metas=self.request.files['file']
+                for meta in file_metas:
+                    # TODO
+                    # directly store image to the desired place
+
+                    filepath = os.path.join(upload_path,meta['filename'])
+                    display_object.person_filepath = filepath
+                    store_image(filepath,meta['body'])
+
             receive_msg = upload_text_insert_db(display_text=display_object)
             text_file = get_upload_text_data(self)
 

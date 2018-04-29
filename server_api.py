@@ -783,6 +783,33 @@ def upload_text_insert_db(display_text):
             display_text.invisible_title = text_id 
         with TextDao() as textDao:
             textDao.insertData(display_object=display_text)
+        
+        # upload person image
+        if display_text.person_filepath != None:
+            try:
+                p_img_type_dir = get_abs_type_dir(display_text.person_img_type,display_text.server_dir)
+            except:
+                return_msg["error"] = "no such type id : " + str(display_text.type_id)
+                return return_msg
+            p_system_filename = \
+            text_id + "_pImg" + os.path.split(display_text.person_filepath)[1]
+            p_system_filepath = os.path.join(p_img_type_dir, p_system_filename)
+
+            try:
+                copyfile(display_text.person_filepath, p_system_filepath)
+                if os.path.isfile(display_text.person_filepath) and os.path.isfile(p_system_filepath):
+                    os.remove(display_text.person_filepath)
+            except:
+                try:
+                    if os.path.isfile(display_text.person_filepath) and os.path.isfile(p_system_filepath):
+                        os.remove(p_system_filepath)
+                except:
+                    "DO NOTHING"
+                return_msg["error"] = "copy or remove file error"
+                return return_msg
+
+            with TextDao() as textDao:
+                textDao.addPersonImg(text_id,p_system_filename)
 
         return_msg["text_id"] = text_id
         return_msg["text_system_dir"] = system_file_dir

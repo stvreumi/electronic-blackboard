@@ -17,4 +17,7 @@ class DisplayImage(DisplayObject):
 	thumbnail_name = ""
 
 class DisplayText(DisplayObject):
+	person_filepath = ""
+	person_img = None
+	person_img_type = None
 	invisible_title = None

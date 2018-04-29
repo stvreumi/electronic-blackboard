@@ -404,6 +404,11 @@ class TextDao(DataManipulateDao):
         sql = 'UPDATE text_data SET text_is_expire=1 WHERE text_is_expire=0 and text_invisible_title="news"'
         self.db.cmd(sql)
 
+    def addPersonImg(self, textId, personImgId):
+        sql = 'UPDATE text_data SET person_img="{personImgID}" WHERE text_id="{textId}"'\
+            .format(personImgId=personImgId, textId=textId)
+        self.db.cmd(sql)
+
 class UserPreferDao(DefaultDao):
     def generateNewId(self):
         sql ='SELECT pref_id FROM user_prefer ORDER BY pref_set_time DESC, pref_id DESC LIMIT 1'
