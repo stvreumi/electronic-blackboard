@@ -8,6 +8,13 @@ div.header {
     background-color: #CE0000;
     position: relative;
 }
+div.header div#person_img {
+    height: 250px;
+    width: 250px;
+    position: relative;
+    left: 70%;
+    top: 30%;
+}
 div.content {
     position: relative;
 }

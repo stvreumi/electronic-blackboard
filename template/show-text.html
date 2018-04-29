@@ -2,6 +2,7 @@
 <div class="title2">
     <div class="header">
         <span id="con" >{{ text_info['con'] }}</span>
+        <div id="person_img"></div>
     </div>
     <div class='content'>
         <div class='title' id='title1'>{{ text_info['title1'] }}</div>
@@ -30,5 +31,9 @@
 <script>
     $('div.header').css('background-color', '{{ text_info['background_color'] }}')
     $('div.bar').css('background-color', '{{ text_info['background_color'] }}')
+    {% if 'person_img' in text_info %}
+    $('div#person_img').css('background-image', 'url({{ text_info['person_img'] }})')
+    $('div#person_img').css('background-size', '100%')
+    {% end %}
 </script>
 {% end %}
